@@ -1,7 +1,15 @@
 
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kafka.Mysql.Example", "Kafka.Mysql.Example.csproj", "{4458FDC0-F608-454F-8C24-2CCACECBF1A9}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6B25D64E-F26F-4C71-9192-E2165819C4D2}"
+	ProjectSection(SolutionItems) = preProject
+		docker-compose.yml = docker-compose.yml
+		docker-compose-api.yml = docker-compose-api.yml
+		my.cnf = my.cnf
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kafka.Mysql.Example", "src\Kafka.Mysql.Example.csproj", "{3875EC69-9D74-45CE-A7BA-21F09C8B6D38}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -9,9 +17,9 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{4458FDC0-F608-454F-8C24-2CCACECBF1A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4458FDC0-F608-454F-8C24-2CCACECBF1A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4458FDC0-F608-454F-8C24-2CCACECBF1A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4458FDC0-F608-454F-8C24-2CCACECBF1A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3875EC69-9D74-45CE-A7BA-21F09C8B6D38}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3875EC69-9D74-45CE-A7BA-21F09C8B6D38}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3875EC69-9D74-45CE-A7BA-21F09C8B6D38}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3875EC69-9D74-45CE-A7BA-21F09C8B6D38}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

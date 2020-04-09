@@ -14,4 +14,10 @@
     <Folder Include="ViewModels\" />
     <Folder Include="Services\" />
   </ItemGroup>
+  <ItemGroup>
+    <None Remove="docker-compose.yml" />
+    <None Remove="README.md" />
+    <None Remove="my.cnf" />
+    <None Remove="docker-compose-api.yml" />
+  </ItemGroup>
 </Project>

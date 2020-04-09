@@ -34,6 +34,10 @@ namespace Kafka.Mysql.Example
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+                })
+                .ConfigureServices((hostContext, services) =>
+                {
+                    services.AddHostedService<Worker>();
                 });
     }
 }
