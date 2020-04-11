@@ -12,7 +12,7 @@ Use o docker-compose para subir os serviços necessários
 - Mysql que é nosso Banco de dados.
 - Zookeeper é responsável por armazenar nossas chaves e valores
 - Kafka para que possamos criar a fila
-- Connector
+- Connector para ouvirmos as alterações na base.
 
 ```bash
 docker-compose up
