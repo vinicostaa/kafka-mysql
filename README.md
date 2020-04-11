@@ -1,4 +1,4 @@
-# O Projeto
+# Projeto
 
 - Debezium para escutar mudanças no MySql
 - Kafka para criar um tópico que armazena essas alterações
