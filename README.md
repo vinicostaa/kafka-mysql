@@ -105,4 +105,4 @@ API - Váriaveis de ambiente:
 
 Temos dois testes, um para retorno vazio caso o chache não estaja preenchido e outro com o cache já preenchido.
 
-![alt text](https://raw.githubusercontent.com/username/projectname/branch/path/to/img.png)
+![alt text](https://raw.githubusercontent.com/vinicostaa/kafka-mysql/master/test.png)
