@@ -19,11 +19,12 @@ docker-compose up
 ```
 
 Carregado informações no MySql
-Password: `root`
 
 ```bash
 docker-compose exec mysql bash -c "mysql -u root -p\$MYSQL_ROOT_PASSWORD"
 ```
+
+Password = `root`
 
 ```bash
 create database cardb;
@@ -80,7 +81,7 @@ curl -L -X POST 'localhost:8083/connectors/' -H 'Content-Type: application/json'
 }'
 ```
 
-Para verificarmos se nossa nosso conector está funcionando, execute:
+Para verificarmos se nosso conector está enviando para a fila, execute:
 
 ```bash
 docker-compose exec kafka bash
