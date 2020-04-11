@@ -12,7 +12,6 @@ namespace Kafka.Mysql.Example.Controllers
     public class CarController : ControllerBase
     {
         private readonly ILogger<CarController> _logger;
-        private readonly IMemoryCache _cache;
         private readonly IRepositoryService _repositoryService;
 
         public CarController(ILogger<CarController> logger,
