@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Kafka.Mysql.Example.Interfaces.Services;
 using Kafka.Mysql.Example.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -31,6 +32,7 @@ namespace Kafka.Mysql.Example
 
             services.AddMemoryCache();
 
+            services.AddScoped<IRepositoryService, CacheRepositoryService>();
             services.AddSingleton<ICacheMySql, CacheMySql>();
         }
 

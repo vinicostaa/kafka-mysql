@@ -13,6 +13,8 @@
   <ItemGroup>
     <Folder Include="ViewModels\" />
     <Folder Include="Services\" />
+    <Folder Include="Interfaces\" />
+    <Folder Include="Interfaces\Services\" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="docker-compose.yml" />
