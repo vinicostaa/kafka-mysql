@@ -89,7 +89,7 @@ docker-compose exec kafka bash
 kafka-console-consumer --bootstrap-server kafka:9092 --from-beginning
 ```
 
-Obs: Note que usamos o --from-beginning para trazer as mensagem da fima desde o começo.
+Obs: Note que usamos o `--from-beginning` para trazer as mensagem da fila desde o começo.
 
 ## Aplicação
 
@@ -105,4 +105,4 @@ API - Váriaveis de ambiente:
 
 Temos dois testes, um para retorno vazio caso o chache não estaja preenchido e outro com o cache já preenchido.
 
-![alt text](https://raw.githubusercontent.com/username/projectname/branch/path/to/img.png)
+![alt text](https://raw.githubusercontent.com/vinicostaa/kafka-mysql/master/test.png)
