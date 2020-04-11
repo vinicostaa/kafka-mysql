@@ -7,9 +7,8 @@ namespace Kafka.Mysql.Example.Interfaces.Services
 {
     public interface IRepositoryService
     {
-        void GetByIdFromCache(int id, out object value);
-        //void Remove(string value);
-        //bool TryGetValue(string value);
-        //void Set(CarCacheViewModel item);
+        bool GetByIdFromCache(int id, out object value);
+        void RemoveFromCache(int id);
+        void SetFromCache(int id, object item);
     }
 }

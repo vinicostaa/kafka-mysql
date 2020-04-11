@@ -32,8 +32,8 @@ namespace Kafka.Mysql.Example
 
             services.AddMemoryCache();
 
-            services.AddScoped<IRepositoryService, CacheRepositoryService>();
-            services.AddSingleton<ICacheMySql, CacheMySql>();
+            services.AddSingleton<IRepositoryService, CacheRepositoryService>();
+            services.AddSingleton<ICdcService, CdcService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

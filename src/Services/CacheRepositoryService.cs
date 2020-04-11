@@ -15,19 +15,22 @@ namespace Kafka.Mysql.Example.Services
             _cache = cache;
         }
 
-        public void GetByIdFromCache(int id, out object value)
+        public bool GetByIdFromCache(int id, out object value)
         {
             var key = id;
+            _cache.TryGetValue(key, out var car);
+            value = car;
+            return car != null;
+        }
 
-            if (_cache.TryGetValue(key, out var car))
-            {
-                value = car;
-            } else
-            {
-                value = null;
-            }
+        public void RemoveFromCache(int id)
+        {
+            _cache.Remove(id);
+        }
 
-            //value = null;
+        public void SetFromCache(int id, object item)
+        {
+            _cache.Set(id, item);
         }
     }
 }

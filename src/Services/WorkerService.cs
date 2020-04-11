@@ -5,20 +5,20 @@ using Microsoft.Extensions.Hosting;
 
 namespace Kafka.Mysql.Example.Services
 {
-    public class Worker : BackgroundService
+    public class WorkerService : BackgroundService
     {
-        private readonly ICacheMySql _cacheMySql;
+        private readonly ICdcService _cdcService;
 
-        public Worker(ICacheMySql cacheMySql)
+        public WorkerService(ICdcService cdcService)
         {
-            _cacheMySql = cacheMySql;
+            _cdcService = cdcService;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                await Task.Run(() => _cacheMySql.Consume(false, out _, stoppingToken), stoppingToken);
+                await Task.Run(() => _cdcService.Consume(false, out _, stoppingToken), stoppingToken);
             }
         }
     }

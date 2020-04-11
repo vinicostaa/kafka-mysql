@@ -9,14 +9,26 @@ using System.Threading;
 
 namespace Kafka.Mysql.Test
 {
-   public class UnitTest1
+   public class IntegrationTest
     {
         
         [Fact]
-        public async Task Should_get_car()
+        public async Task Get_car_not_exist()
         {
             using var system = SystemUnderTest.ForStartup<Startup>();
-            var cache = system.Services.GetRequiredService<ICacheMySql>();
+  
+            await system.Scenario(_ =>
+            {
+                _.Get.Url("/car/1");
+                _.StatusCodeShouldBe(404);
+            });
+        }
+
+        [Fact]
+        public async Task Get_car_exist()
+        {
+            using var system = SystemUnderTest.ForStartup<Startup>();
+            var cache = system.Services.GetRequiredService<ICdcService>();
 
             bool fineshed;
             do
@@ -24,14 +36,11 @@ namespace Kafka.Mysql.Test
                 cache.Consume(true, out fineshed, CancellationToken.None);
             } while (fineshed == false);
 
-            // This runs an HTTP request and makes an assertion
-            // about the expected content of the response
             await system.Scenario(_ =>
             {
                 _.Get.Url("/car/1");
-                _.StatusCodeShouldBeOk();
+                _.StatusCodeShouldBe(200);
             });
-
         }
     }
 }

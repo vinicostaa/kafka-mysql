@@ -18,7 +18,7 @@ namespace Kafka.Mysql.Example
         {
             var host = CreateHostBuilder(args).Build();
 
-            var cacheMySql = host.Services.GetRequiredService<ICacheMySql>();
+            var cdcService = host.Services.GetRequiredService<ICdcService>();
 
             /*
              * Salvando as mensagens já existentes na fila no Memory Cache
@@ -26,7 +26,7 @@ namespace Kafka.Mysql.Example
             bool fineshed;
             do
             {
-                cacheMySql.Consume(true, out fineshed, CancellationToken.None);
+                cdcService.Consume(true, out fineshed, CancellationToken.None);
             } while (fineshed == false);
 
             host.Run();
@@ -43,7 +43,7 @@ namespace Kafka.Mysql.Example
                     /*
                         * Iniciando Service Worker que ficará consumindo o tópico em Background
                         */
-                    services.AddHostedService<Worker>();
+                    services.AddHostedService<WorkerService>();
                 });
     }
 }
