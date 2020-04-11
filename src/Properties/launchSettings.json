@@ -19,14 +19,13 @@
     },
     "Kafka.Mysql.Example": {
       "commandName": "Project",
-      "launchBrowser": true,
       "launchUrl": "weatherforecast",
       "environmentVariables": {
         "KAFKA_SERVER": "localhost:9093",
-        "KAFKA_TOPIC_MYSQL": "mysql.mystore.cars",
+        "TOPIC_MYSQL_CAR": "mysql.cardb.cars",
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "applicationUrl": "https://localhost:5001;http://localhost:5000"
+      "applicationUrl": "http://localhost:5000"
     }
   }
 }

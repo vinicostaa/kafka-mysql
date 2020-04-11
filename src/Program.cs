@@ -20,6 +20,9 @@ namespace Kafka.Mysql.Example
 
             var cacheMySql = host.Services.GetRequiredService<ICacheMySql>();
 
+            /*
+             * Salvando as mensagens já existentes na fila no Memory Cache
+             */
             bool fineshed;
             do
             {
@@ -37,6 +40,9 @@ namespace Kafka.Mysql.Example
                 })
                 .ConfigureServices((hostContext, services) =>
                 {
+                    /*
+                        * Iniciando Service Worker que ficará consumindo o tópico em Background
+                        */
                     services.AddHostedService<Worker>();
                 });
     }

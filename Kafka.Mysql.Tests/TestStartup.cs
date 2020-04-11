@@ -1,23 +1,16 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
+﻿using System;
 using Kafka.Mysql.Example.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
-namespace Kafka.Mysql.Example
+namespace Kafka.Mysql.Tests
 {
-    public class Startup
+    public class TestStartup
     {
-        public Startup(IConfiguration configuration)
+        public TestStartup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
@@ -27,7 +20,7 @@ namespace Kafka.Mysql.Example
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers().AddApplicationPart(Assembly.Load(new AssemblyName("Kafka.Mysql.Example")));
+            services.AddControllers();
 
             services.AddMemoryCache();
 
@@ -53,5 +46,7 @@ namespace Kafka.Mysql.Example
                 endpoints.MapControllers();
             });
         }
+
+
     }
 }
