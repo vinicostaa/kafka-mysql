@@ -19,6 +19,7 @@ docker-compose up
 ```
 
 Carregado informações no MySql
+Password: `root`
 
 ```bash
 docker-compose exec mysql bash -c "mysql -u root -p\$MYSQL_ROOT_PASSWORD"
