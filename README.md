@@ -93,16 +93,6 @@ kafka-console-consumer --bootstrap-server kafka:9092 --from-beginning
 
 Obs: Note que usamos o `--from-beginning` para trazer as mensagem da fila desde o começo.
 
-## Aplicação
-
-API - Váriaveis de ambiente:
-
-`KAFKA_SERVER: localhost:9093`
-
-`TOPIC_MYSQL_CAR: mysql.cardb.cars`
-
-`ASPNETCORE_ENVIRONMENT: Development`
-
 ## Testes
 
 Temos dois testes, um para retorno vazio caso o chache não estaja preenchido e outro com o cache já preenchido.

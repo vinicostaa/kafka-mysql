@@ -2,7 +2,6 @@
 using System.Text.Json;
 using System.Threading;
 using Confluent.Kafka;
-using Kafka.Mysql.Example.Interfaces.Services;
 using Kafka.Mysql.Example.ViewModels;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
@@ -12,20 +11,38 @@ namespace Kafka.Mysql.Example.Services
 {
     public class CdcService : ICdcService
     {
-        private readonly ILogger<CdcService> _logger;
-        private readonly IRepositoryService _repositoryService;
+        //private readonly ILogger<CacheMySql> _logger;
+        private readonly IMemoryCache _cache;
         private readonly IConsumer<string, string> _consumer;
-        private readonly string cardb_cars_topic;
+        private readonly ILogger<CdcService> _logger;
+        private static readonly string _kafkaTopic = "mysql.cardb.cars";
 
-        public CdcService(IRepositoryService repositoryService, ILogger<CdcService> logger, IConfiguration configuration)
+        public CdcService(IMemoryCache cache, ILogger<CdcService> logger)
         {
-            _repositoryService = repositoryService;
+            _cache = cache;
+            
+            var conf = new ConsumerConfig
+            {
+                GroupId =
+                $"mysql.mystore.products.{Guid.NewGuid():N}.group.id", //Choose different group id, because we want to read cache topic from the scratch.
+                BootstrapServers = "localhost:9093",
+                AutoOffsetReset = AutoOffsetReset.Earliest
+            };
+
+            _consumer = new ConsumerBuilder<string, string>(conf).Build();
             _logger = logger;
 
-            // Construindo Consumidor
-            cardb_cars_topic = configuration.GetSection("TOPIC_MYSQL_CAR").Value;
-            _consumer = new ConsumerBuilder<string, string>(GetConsumerConfig(configuration)).Build();
-            _consumer.Subscribe(cardb_cars_topic);
+            //var conf = new ConsumerConfig
+            //{
+            //    GroupId =
+            //        $"mysql.mystore.products.{Guid.NewGuid():N}.group.id", //Choose different group id, because we want to read cache topic from the scratch.
+            //    BootstrapServers = "localhost:9093",
+            //    AutoOffsetReset = AutoOffsetReset.Earliest
+            //};
+
+           
+           // _consumer = new ConsumerBuilder<string, string>(conf).Build();
+            _consumer.Subscribe(_kafkaTopic);
         }
 
         public void Consume(bool returnOnLastOffset, out bool finished, CancellationToken cancellationToken)
@@ -33,10 +50,8 @@ namespace Kafka.Mysql.Example.Services
             finished = false;
             try
             {
-
-                // Obtendo a quandidade de mensagens na fila
                 var watermark = _consumer.QueryWatermarkOffsets(
-                    new TopicPartition(cardb_cars_topic, new Partition(0)), TimeSpan.FromMilliseconds(60000));
+                    new TopicPartition(_kafkaTopic, new Partition(0)), TimeSpan.FromMilliseconds(60000));
 
                 if (returnOnLastOffset && watermark.High.Value == 0)
                 {
@@ -44,30 +59,24 @@ namespace Kafka.Mysql.Example.Services
                     return;
                 }
 
-                /* Consumindo as mensagens salvando
-                 * alterando ou sobrepondo itens do MemoryCache
-                 */
                 var consumeResult = _consumer.Consume(cancellationToken);
                 if (consumeResult.Message.Value == null)
                 {
                     var item = JsonSerializer.Deserialize<CarCacheViewModel>(consumeResult.Message.Key);
-                    if (!_repositoryService.GetByIdFromCache(item.Id, out _))
+                    if (!_cache.TryGetValue(item.Id, out _))
                         return;
 
                     _logger.LogDebug($"remove cache: {consumeResult.Message.Key}");
-                    _repositoryService.RemoveFromCache(item.Id);
+                    _cache.Remove(item.Id);
                 }
                 else
                 {
                     var item = JsonSerializer.Deserialize<CarCacheViewModel>(consumeResult.Message.Value);
                     _logger.LogDebug($"new cache: {consumeResult.Message.Value}");
-                    _repositoryService.SetFromCache(item.Id, item);
+                    _logger.LogDebug($"new cache: {consumeResult.Message.Value}");
+                    _cache.Set(item.Id, item);
                 }
 
-                /*
-                 * Caso não contenha mais mensagens a serem consumidas na fila
-                 * O processo estara finalizado
-                 */
                 if (returnOnLastOffset && watermark.High.Value - 1 == consumeResult.Offset.Value)
                     finished = true;
             }
@@ -78,18 +87,6 @@ namespace Kafka.Mysql.Example.Services
                 _consumer.Dispose();
                 throw;
             }
-        }
-
-        public ConsumerConfig GetConsumerConfig(IConfiguration configuration)
-        {
-            // Escolhendo sempre um id de grupo diferente, para podermos ler o tópico do zero.
-            return new ConsumerConfig
-            {
-                GroupId =
-                   $"mysql.cardb.cars.{Guid.NewGuid():N}.group.id",
-                BootstrapServers = configuration.GetSection("KAFKA_SERVER").Value,
-                AutoOffsetReset = AutoOffsetReset.Earliest
-            };
         }
     }
 }

@@ -1,46 +1,39 @@
 using System;
 using Xunit;
-using Kafka.Mysql.Example;
-using Alba;
-using System.Threading.Tasks;
 using Kafka.Mysql.Example.Services;
-using Microsoft.Extensions.DependencyInjection;
 using System.Threading;
+using Moq;
+using Microsoft.Extensions.Caching.Memory;
+using Confluent.Kafka;
+using Microsoft.Extensions.Logging;
+using Kafka.Mysql.Example.Controllers;
 
 namespace Kafka.Mysql.Test
 {
    public class IntegrationTest
     {
-        
         [Fact]
-        public async Task Get_car_not_exist()
+        public void ConsumingAndSaveOnMemoryCache()
         {
-            using var system = SystemUnderTest.ForStartup<Startup>();
-  
-            await system.Scenario(_ =>
-            {
-                _.Get.Url("/car/1");
-                _.StatusCodeShouldBe(404);
-            });
-        }
+            var logger = Mock.Of<ILogger<CdcService>>();
+            var memoryCache = Mock.Of<IMemoryCache>();
+            var cachEntry = Mock.Of<ICacheEntry>();
+            
 
-        [Fact]
-        public async Task Get_car_exist()
-        {
-            using var system = SystemUnderTest.ForStartup<Startup>();
-            var cache = system.Services.GetRequiredService<ICdcService>();
+            var mockMemoryCache = Mock.Get(memoryCache);
+            mockMemoryCache
+                .Setup(m => m.CreateEntry(It.IsAny<object>()))
+                .Returns(cachEntry);
+
+            CdcService cdcService = new CdcService(memoryCache, logger);
 
             bool fineshed;
             do
             {
-                cache.Consume(true, out fineshed, CancellationToken.None);
+                cdcService.Consume(true, out fineshed, CancellationToken.None);
             } while (fineshed == false);
 
-            await system.Scenario(_ =>
-            {
-                _.Get.Url("/car/1");
-                _.StatusCodeShouldBe(200);
-            });
+            Assert.True(fineshed);
         }
     }
 }
