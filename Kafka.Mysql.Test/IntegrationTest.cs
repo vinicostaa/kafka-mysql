@@ -1,12 +1,10 @@
-using System;
 using Xunit;
 using Kafka.Mysql.Example.Services;
 using System.Threading;
 using Moq;
 using Microsoft.Extensions.Caching.Memory;
-using Confluent.Kafka;
 using Microsoft.Extensions.Logging;
-using Kafka.Mysql.Example.Controllers;
+
 
 namespace Kafka.Mysql.Test
 {
