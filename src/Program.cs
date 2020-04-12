@@ -42,8 +42,8 @@ namespace Kafka.Mysql.Example
                 .ConfigureServices((hostContext, services) =>
                 {
                     /*
-                        * Iniciando Service Worker que ficará consumindo o tópico em Background
-                        */
+                    * Iniciando Service Worker que ficará consumindo o tópico em Background
+                    */
                     services.AddHostedService<WorkerService>();
                 });
     }

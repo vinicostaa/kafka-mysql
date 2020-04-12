@@ -4,44 +4,33 @@ using System.Threading;
 using Confluent.Kafka;
 using Kafka.Mysql.Example.ViewModels;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace Kafka.Mysql.Example.Services
 {
     public class CdcService : ICdcService
     {
-        //private readonly ILogger<CacheMySql> _logger;
         private readonly IMemoryCache _cache;
         private readonly IConsumer<string, string> _consumer;
         private readonly ILogger<CdcService> _logger;
         private static readonly string _kafkaTopic = "mysql.cardb.cars";
+        private static readonly string _kafkaServer = "localhost:9093";
+
 
         public CdcService(IMemoryCache cache, ILogger<CdcService> logger)
         {
+            _logger = logger;
             _cache = cache;
-            
+
+            // Criando sempre um novo grupo para consumirmos a fila do zero.
             var conf = new ConsumerConfig
             {
-                GroupId =
-                $"mysql.mystore.products.{Guid.NewGuid():N}.group.id", //Choose different group id, because we want to read cache topic from the scratch.
-                BootstrapServers = "localhost:9093",
+                GroupId = $"mysql.cardb.{Guid.NewGuid()}.group.id",
+                BootstrapServers = _kafkaServer,
                 AutoOffsetReset = AutoOffsetReset.Earliest
             };
 
             _consumer = new ConsumerBuilder<string, string>(conf).Build();
-            _logger = logger;
-
-            //var conf = new ConsumerConfig
-            //{
-            //    GroupId =
-            //        $"mysql.mystore.products.{Guid.NewGuid():N}.group.id", //Choose different group id, because we want to read cache topic from the scratch.
-            //    BootstrapServers = "localhost:9093",
-            //    AutoOffsetReset = AutoOffsetReset.Earliest
-            //};
-
-           
-           // _consumer = new ConsumerBuilder<string, string>(conf).Build();
             _consumer.Subscribe(_kafkaTopic);
         }
 
@@ -50,9 +39,11 @@ namespace Kafka.Mysql.Example.Services
             finished = false;
             try
             {
+                // pegando número de mensagens a consumir nesse tópico
                 var watermark = _consumer.QueryWatermarkOffsets(
                     new TopicPartition(_kafkaTopic, new Partition(0)), TimeSpan.FromMilliseconds(60000));
 
+                
                 if (returnOnLastOffset && watermark.High.Value == 0)
                 {
                     finished = true;
@@ -66,14 +57,14 @@ namespace Kafka.Mysql.Example.Services
                     if (!_cache.TryGetValue(item.Id, out _))
                         return;
 
-                    _logger.LogDebug($"remove cache: {consumeResult.Message.Key}");
+                    _logger.LogDebug($"Removendo do cache: {consumeResult.Message.Key}");
                     _cache.Remove(item.Id);
                 }
                 else
                 {
                     var item = JsonSerializer.Deserialize<CarCacheViewModel>(consumeResult.Message.Value);
-                    _logger.LogDebug($"new cache: {consumeResult.Message.Value}");
-                    _logger.LogDebug($"new cache: {consumeResult.Message.Value}");
+                    _logger.LogDebug($"Novo cache: {consumeResult.Message.Value}");
+                    _logger.LogDebug($"Novo cache: {consumeResult.Message.Value}");
                     _cache.Set(item.Id, item);
                 }
 

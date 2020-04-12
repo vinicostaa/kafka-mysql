@@ -25,8 +25,8 @@ namespace Kafka.Mysql.Example.Controllers
         {
             if (!_memoryCache.TryGetValue(id, out var car))
             {
-                _logger.LogError($"Car Id {id} not found");
-                return NotFound($"Car Id {id} not found");
+                _logger.LogError($"Carro com Id {id} não encontrado");
+                return NotFound($"Carro com Id {id} não encontrado");
             }
 
             _logger.LogInformation(JsonSerializer.Serialize(car));

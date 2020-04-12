@@ -13,24 +13,25 @@ namespace Kafka.Mysql.Test
         [Fact]
         public void ConsumingAndSaveOnMemoryCache()
         {
+            //Arranje
             var logger = Mock.Of<ILogger<CdcService>>();
             var memoryCache = Mock.Of<IMemoryCache>();
             var cachEntry = Mock.Of<ICacheEntry>();
             
-
             var mockMemoryCache = Mock.Get(memoryCache);
             mockMemoryCache
                 .Setup(m => m.CreateEntry(It.IsAny<object>()))
                 .Returns(cachEntry);
-
             CdcService cdcService = new CdcService(memoryCache, logger);
 
+            // Act
             bool fineshed;
             do
             {
                 cdcService.Consume(true, out fineshed, CancellationToken.None);
             } while (fineshed == false);
 
+            // Assert
             Assert.True(fineshed);
         }
     }
