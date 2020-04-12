@@ -97,4 +97,4 @@ Obs: Note que usamos o `--from-beginning` para trazer as mensagem da fila desde 
 
 Para verificar se tudo foi instalado corretamente, execute o teste de integração:
 
-![alt text](https://raw.githubusercontent.com/vinicostaa/kafka-mysql/master/test.png)
+![alt text](https://raw.githubusercontent.com/vinicostaa/kafka-mysql/master/integration-test.png)
