@@ -18,7 +18,7 @@ Use o docker-compose para subir os serviços necessários
 docker-compose up
 ```
 
-Carregado de dados no MySql
+Para carregar dados no Mysql, abra um novo terminal e execute:
 
 ```bash
 docker-compose exec mysql bash -c "mysql -u root -p\$MYSQL_ROOT_PASSWORD"
@@ -46,6 +46,12 @@ modification_time datetime on update current_timestamp);
 
 ```bash
 insert into cars(name, color, price) values("Fusca", "Amarelo", 50.000);
+```
+
+Mais operações
+
+```bash
+insert into cars(name, color, price) values("Gol", "Prata", 40.000);
 update cars set price = 10.000 where name = "Fusca";
 delete from cars where id = 1;
 ```
@@ -81,17 +87,21 @@ curl -L -X POST 'localhost:8083/connectors/' -H 'Content-Type: application/json'
 }'
 ```
 
-Para verificarmos se nosso conector está funcionando, execute:
+Para verificarmos se nosso conector está funcionando, vamos consumir nosso tópico `mysql.cardb.cars`, execute:
 
 ```bash
 docker-compose exec kafka bash
 ```
 
 ```bash
-kafka-console-consumer --bootstrap-server kafka:9092 --from-beginning
+kafka-console-consumer --bootstrap-server kafka:9092 --from-beginning --topic mysql.cardb.cars
 ```
 
 Obs: Note que usamos o `--from-beginning` para trazer as mensagem da fila desde o começo.
+
+## Aplicação
+
+Para verificar se as mudanças no banco de dados refletiram na aplicaçao, Rode e vá para http://localhost:5000/car/1
 
 ## Teste de Integração
 
