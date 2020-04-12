@@ -12,13 +12,13 @@ Use o docker-compose para subir os serviços necessários
 - Mysql que é nosso Banco de dados.
 - Zookeeper é responsável por armazenar nossas chaves e valores
 - Kafka para que possamos criar a fila
-- Connector para ouvirmos as alterações na base.
+- Connector para enviarmos alterações na base para a fila no Kafka
 
 ```bash
 docker-compose up
 ```
 
-Carregado informações no MySql
+Carregado de dados no MySql
 
 ```bash
 docker-compose exec mysql bash -c "mysql -u root -p\$MYSQL_ROOT_PASSWORD"
@@ -50,7 +50,7 @@ update cars set price = 10.000 where name = "Fusca";
 delete from cars where id = 1;
 ```
 
-Configurando o nosso conector `carddb-connector` para pegarmos as alterações na base de dados:
+Configurando o nosso conector `carddb-connector` para pegarmos as alterações na base de dados e mandar para a fila:
 
 Abra uma nova aba no terminal e execute:
 
@@ -81,7 +81,7 @@ curl -L -X POST 'localhost:8083/connectors/' -H 'Content-Type: application/json'
 }'
 ```
 
-Para verificarmos se nosso conector está enviando para a fila, execute:
+Para verificarmos se nosso conector está funcionando, execute:
 
 ```bash
 docker-compose exec kafka bash
@@ -93,8 +93,8 @@ kafka-console-consumer --bootstrap-server kafka:9092 --from-beginning
 
 Obs: Note que usamos o `--from-beginning` para trazer as mensagem da fila desde o começo.
 
-## Testes
+## Teste de Integração
 
-Temos dois testes, um para retorno vazio caso o chache não estaja preenchido e outro com o cache já preenchido.
+Para verificar se tudo foi instalado corretamente, execute o teste de integração:
 
 ![alt text](https://raw.githubusercontent.com/vinicostaa/kafka-mysql/master/test.png)
